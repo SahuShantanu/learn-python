@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">   
+    <title>Chapters</title>
+    <link rel="icon" type="image/ico" href="/72537-icons-python-programming-computer-social-tutorial.ico">
+
+    <link rel="stylesheet" href="stylesnew.css">
+
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-left">
+            <h1>Teach-Python</h1>
+        </div>
+        <div class="navbar-right">
+            <button class="menu-toggle" id="menu-toggle">&#9776;</button>
+            <ul class="nav-links" id="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="chapters.html">Chapter</a></li>
+                <li><a href="add-topic.html">Add Topics</a></li>
+                <li><a href="progress.html">Progress</a></li>
+                <li><a href="login.html">Login/Signup</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="chapter-container">
+        <h2>Chapters</h2>
+        <div id="chapter-list"></div>
+        <p><a href="add-topic.html" class="add-new-topic">Add a New Topic</a></p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const chapterList = document.getElementById('chapter-list');
+            let chapters = JSON.parse(localStorage.getItem('chapters')) || [];
+
+            if (chapters.length === 0) {
+                chapterList.innerHTML = '<p>No topics available. Add a new topic!</p>';
+            } else {
+                chapters.forEach((chapter, index) => {
+                    const chapterDiv = document.createElement('div');
+                    chapterDiv.classList.add('chapter');
+                    chapterDiv.innerHTML = `
+                        <h3 style="font-size:30px;">Topic ${index + 1}: ${chapter.name}</h3>
+                        <p style="font-size:30px;"><strong>Creator:</strong> ${chapter.creator}</p>
+                        <p style="font-size:30px;"><strong>Date:</strong> ${chapter.date}</p>
+                        <p style="font-size:25px;">${chapter.notes}</p>
+                        <button onclick="editTopic(${index})" style="font-size:25px;" >Edit</button>
+                        <hr>
+                    `;
+                    chapterList.appendChild(chapterDiv);
+                });
+            }
+        });
+
+        function editTopic(index) {
+            let chapters = JSON.parse(localStorage.getItem('chapters'));
+            const chapter = chapters[index];
+
+            // Prompt user for new details
+            const newName = prompt("Edit Topic Name:", chapter.name);
+            const newNotes = prompt("Edit Notes:", chapter.notes);
+
+            if (newName && newNotes) {
+                chapter.name = newName;
+                chapter.notes = newNotes;
+                chapters[index] = chapter;
+                localStorage.setItem('chapters', JSON.stringify(chapters));
+                alert('Topic updated successfully!');
+                location.reload();
+            }
+        }
+    </script>
+    <script src="script.js"></script>
+</body>
+</html>
